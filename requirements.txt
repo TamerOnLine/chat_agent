@@ -1,0 +1,12 @@
+pytest
+langchain-ollama
+langchain-community
+python-dotenv
+requests
+yfinance
+pipdeptree
+langchain
+google-search-results
+
+
+
