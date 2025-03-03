@@ -7,6 +7,7 @@ yfinance
 pipdeptree
 langchain
 google-search-results
+langchain-openai
 
 
 

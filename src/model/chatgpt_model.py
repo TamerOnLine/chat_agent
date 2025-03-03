@@ -3,7 +3,8 @@ import os
 from typing import Optional
 
 from dotenv import load_dotenv
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
+
 from pydantic import BaseModel, Field
 
 # Load environment variables
