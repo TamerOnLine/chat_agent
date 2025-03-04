@@ -8,6 +8,15 @@ pipdeptree
 langchain
 google-search-results
 langchain-openai
+textblob
+selenium
+webdriver-manager
+undetected-chromedriver
+cloudscraper
+
+
+
+
 
 
 

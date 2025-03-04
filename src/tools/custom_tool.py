@@ -1,11 +1,24 @@
+from textblob import TextBlob
 from langchain.tools import Tool
 from model.ollama_model import OllamaHandler
 from tools.weather_tool import get_weather
 from tools.stock_tool import get_stock_price
-from tools.internet_search_tool import search_internet  # Importing search tool
+from tools.internet_search_tool import search_internet
 
 # Initialize the Ollama model for direct conversation
 ollama_handler = OllamaHandler()
+
+
+def is_greeting(query: str) -> bool:
+    """
+    Detects if the input query is a greeting by analyzing the sentence structure and meaning.
+    """
+    analysis = TextBlob(query)
+    words = analysis.words.lower()
+    
+    if "hello" in words or "hi" in words or "hallo" in words or analysis.sentiment.polarity > 0.5:
+        return True
+    return False
 
 
 def custom_response_tool(query: str) -> str:
@@ -14,6 +27,11 @@ def custom_response_tool(query: str) -> str:
     If no suitable tool is found, initiates a live chat session.
     """
     query_lower = query.lower().strip()
+
+    # التحقق مما إذا كان الإدخال تحية
+    if is_greeting(query_lower):
+        return "Hello! How can I assist you today?"
+
     words = query_lower.split()
 
     # Check for weather queries
@@ -22,10 +40,8 @@ def custom_response_tool(query: str) -> str:
         return get_weather(city)
 
     # Check for stock price queries
-    if any(keyword in query_lower for keyword in ["stock", "price", "share"]):
-        for word in words:
-            if len(word) >= 2 and word.isalpha():
-                return get_stock_price(word)
+    if any(keyword in query_lower for keyword in ["stock", "price", "share"]) or query.isupper():
+        return get_stock_price(query)
 
     # Check for internet search queries
     if len(words) > 1 or query.isalpha():
@@ -41,7 +57,7 @@ def custom_response_tool(query: str) -> str:
             print("Exiting live chat mode.")
             return "Live chat session ended."
 
-        response = ollama_handler.get_response(user_input)  # Ensure the method exists
+        response = ollama_handler.get_response(user_input)
         print(f"AI: {response}")
 
 
